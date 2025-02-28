@@ -4,16 +4,18 @@ using Microsoft.AspNetCore.Mvc;
 using UsrManagemt.Models; 
 using System.Text.Json.Serialization; 
 using System.Text.Json;
+using UsrManagemt.Database; 
 
 namespace UsrManagemt.Services
 { 
     public class UserRepository: IUserService 
     { 
+        private readonly DBActions _context;
         public UserRepository()
         { 
 
         } 
-        public Task<IActionResult> CreateUser(User user)
+        public async Task<IActionResult> CreateUser(User user)
         { 
             try
             {
@@ -31,13 +33,29 @@ namespace UsrManagemt.Services
                 return new JsonResult(new {erorr = e}); 
             }
         } 
-        public Task<IActionResult> DelUser(int id)
+        public async Task<IActionResult> DelUser(int id)
         { 
-            
+            try 
+            { 
+                await _context.DeleteUser(id); 
+                return new JsonResult(new {message = "User has been deleted"}); 
+            }
+            catch (Exception e)
+            { 
+                return new JsonResult(new {erorr = e}); 
+            }
         } 
-        public Task<IActionResult> ChechUser(int id) 
+        public async Task<IActionResult> CheckUser(int id) 
         { 
-            
+            try 
+            { 
+                var user =  _context.CheckUserD(id); 
+                return new JsonResult(new {user = user});
+            } 
+            catch (Exception e) 
+            { 
+                return new JsonResult(new {erorr = e});
+            }
         }
     }
 }

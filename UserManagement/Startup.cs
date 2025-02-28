@@ -1,3 +1,6 @@
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.OpenApi.Models;
 
 public class Startup
@@ -6,14 +9,13 @@ public class Startup
     {
         services.AddControllersWithViews();
 
-        // Добавляем Swagger
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "User  Management API", Version = "v1" });
         });
     }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
         if (env.IsDevelopment())
         {
@@ -28,17 +30,14 @@ public class Startup
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
-        // Включаем Swagger
         app.UseRouting();
-
         app.UseAuthorization();
 
-        // Включаем Swagger
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "User  Management API V1");
-            c.RoutePrefix = string.Empty; // Устанавливаем Swagger UI на корень приложения
+            c.RoutePrefix = string.Empty; 
         });
 
         app.UseEndpoints(endpoints =>

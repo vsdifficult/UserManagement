@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using UsrManagemt.Models; 
-using UsrManagemt.Services; 
+using UsrManagemt.Services;  
+using UsrManagemt.Database; 
 
 namespace UsrManagemt.Controllers
 {
@@ -8,17 +9,13 @@ namespace UsrManagemt.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly UserRepository _userRepository;
+        private readonly DBActions _userRepository;
 
-        public UserController()
+        public UserController(DBActions dBActions)
         {
-            _userRepository = new UserRepository();
+            _userRepository = dBActions;
         }
 
-        /// <summary>
-        /// Получить всех пользователей
-        /// </summary>
-        /// <returns>Список пользователей</returns>
         [HttpGet]
         public IActionResult GetAllUsers()
         {
@@ -26,22 +23,16 @@ namespace UsrManagemt.Controllers
             return Ok(users);
         }
 
-        /// <summary>
-        /// Создать нового пользователя
-        /// </summary>
-        /// <param name="user">Данные пользователя</param>
-        /// <returns>Результат создания</returns>
         [HttpPost]
         public IActionResult CreateUser ([FromBody] User user)
         {
             if (ModelState.IsValid)
             {
-                _userRepository.AddUser (user);
-                return CreatedAtAction(nameof(GetAllUsers), new { id = user.Id }, user);
+                _userRepository.AddUser(user);
+                return CreatedAtAction(nameof(GetAllUsers), new { id = user.ID }, user);
             }
             return BadRequest(ModelState);
         }
 
-        // Другие действия (Edit, Details и т.д.) можно добавить аналогично
     }
 }
