@@ -7,9 +7,9 @@ using System.Text.Json;
 
 namespace UsrManagemt.Services
 { 
-    public class UserService: IUserService 
+    public class UserRepository: IUserService 
     { 
-        public UserService()
+        public UserRepository()
         { 
 
         } 
